@@ -11,6 +11,21 @@ function encrypt(text) {
    encrypted = Buffer.concat([encrypted, cipher.final()]);
    return { iv: iv.toString('hex'), encryptedData: encrypted.toString('hex') };
 }
+// Get Current Date
+function getCurrentDate() {
+   const today = new Date();
+   return today.getFullYear() + today.getMonth() + today.getDay();
+}
+
+function check(password, code) {
+   const decrypted = decrypt(code)
+   const [pass, date] = decrypted.split(':')
+   if (pass === password && date === getCurrentDate()) {
+      return true;
+   } else {
+      return false;
+   }
+}
 
 // Decrypting text
 function decrypt(text) {
@@ -21,4 +36,4 @@ function decrypt(text) {
    decrypted = Buffer.concat([decrypted, decipher.final()]);
    return decrypted.toString();
 }
-module.exports = {encrypt, decrypt}
+module.exports = { encrypt, decrypt, getCurrentDate }

@@ -1,4 +1,4 @@
-const { encrypt, decrypt} = require('./cryptography')
+const { encrypt, decrypt, getCurrentDate} = require('./cryptography')
 const express = require('express')
 const app = express();
 const port = 3001;
