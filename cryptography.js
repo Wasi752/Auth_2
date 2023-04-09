@@ -5,9 +5,9 @@ const key = crypto.randomBytes(32);
 const iv = crypto.randomBytes(16);
 
 //Encrypting text
-function encrypt(text) {
+function encrypt(id, password) {
    let cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(key), iv);
-   let encrypted = cipher.update(text + ":" + getCurrentDate());
+   let encrypted = cipher.update(id + ":" + password + ":" + getCurrentDate());
    encrypted = Buffer.concat([encrypted, cipher.final()]);
    return { iv: iv.toString('hex'), code: encrypted.toString('hex') };
 }
@@ -24,16 +24,20 @@ function decrypt(text) {
 // Get Current Date
 function getCurrentDate() {
    const today = new Date();
-   return today.getFullYear() + today.getMonth() + today.getDay();
+   return today.getFullYear() + '.' + today.getMonth() + '.' + today.getDate();
 }
 
-function check(password, code) {
-   const decrypted = decrypt(code)
-   const [pass, date] = decrypted.split(':')
-   if (pass === password && parseInt(date) === getCurrentDate()) {
-      return true;
-   } else {
+function check(user, password, code) {
+   try {
+      const decrypted = decrypt(code)
+      const [id, pass, date] = decrypted.split(':')
+      if (parseInt(id) === user, pass === password && parseInt(date) === getCurrentDate()) {
+         return true;
+      } else {
+         return false;
+      }
+   } catch (e) {
       return false;
    }
 }
-module.exports = { encrypt, decrypt, getCurrentDate, check }
+   module.exports = { encrypt, decrypt, getCurrentDate, check }
